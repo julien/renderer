@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+  body{margin:0;width:100%;height:100%;overflow:hidden}
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="index.js"></script>
+
+  <script>
+  window.addEventListener('load', () => {
+
+    const canvas = document.getElementById('canvas');
+
+    const renderer = new Renderer(canvas);
+    renderer.createTexture('./bunny.png')
+      .then(data => {
+        console.log(data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+  </script>
+</body>
+</html>
