@@ -27,7 +27,7 @@ class Renderer {
     this._createBuffers();
 
     this.elementSize = 30;
-    this.vertexData = new Float32Array(100 * 30);
+    this.vertexData = new Float32Array(500 * 30);
 
     const w = this.gl.canvas.clientWidth;
     const h = this.gl.canvas.clientHeight;
@@ -290,7 +290,7 @@ class Renderer {
     const velx = min + Math.random() * (max - min);
     const vely = min + Math.random() * (max - min);
 
-    this.sprites.getFree()
+    return this.sprites.getFree()
       .initialize(x, y, w, h)
       .setVel(velx, vely);
   }
@@ -299,12 +299,15 @@ class Renderer {
     for (let i = 0, l = this.sprites.elements.length; i < l; i++) {
       const sprite = this.sprites.elements[i];
       if (sprite.allocated === true)  {
-
-        if (sprite.life === 0) {
-          this.sprites.free(sprite);
-        }
+        // if (sprite.life === 0) {
+        //   this.sprites.free(sprite);
+        // }
       }
     }
+  }
+
+  removeSprite(sprite) {
+    this.sprites.free(sprite);
   }
 }
 export default Renderer;

@@ -8,12 +8,12 @@
 </head>
 
 <body>
+
   <canvas id="canvas"></canvas>
   <script src="dist/renderer.es5.js"></script>
 
   <script>
   window.addEventListener('load', () => {
-
     const canvas = document.getElementById('canvas');
     canvas.width = innerWidth;
     canvas.height = innerHeight;
@@ -26,7 +26,7 @@
         renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 
         for (let i = 0; i < 100; i++) {
-          renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
+          addSprite();
         }
 
         loop();
@@ -34,6 +34,12 @@
       .catch(err => {
         console.log(err);
       });
+
+    function addSprite() {
+      const s = renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
+      s.life = 100;
+      return s;
+    }
 
     function loop() {
       requestAnimationFrame(loop);
@@ -45,8 +51,8 @@
         if (sprite.allocated === true) {
           sprite.acc.y += 4;
 
-          sprite.acc.x *= 0.025;
-          sprite.acc.y *= 0.025;
+          sprite.acc.x *= 0.06;
+          sprite.acc.y *= 0.2;
 
           sprite.vel.x += sprite.acc.x;
           sprite.vel.y += sprite.acc.y;
@@ -59,16 +65,24 @@
 
           if (sprite.pos.x > renderer.width + sprite.size.x) {
             sprite.vel.x *= -1;
+            sprite.life--;
           }
           if (sprite.pos.x < -sprite.size.x) {
             sprite.vel.x *= -1;
+            sprite.life--;
           }
 
           if (sprite.pos.y < -sprite.size.y) {
             sprite.vel.y *= -1;
+            sprite.life--;
           }
           if (sprite.pos.y > renderer.height + sprite.size.y) {
             sprite.vel.y *= -1;
+            sprite.life--;
+          }
+
+          if (sprite.life === 0) {
+            renderer.removeSprite(sprite);
           }
         }
       }

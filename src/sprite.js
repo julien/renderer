@@ -8,7 +8,7 @@ class Sprite {
     this.acc = {x: 0, y: 0};
     this.vel = {x: 0, y: 0};
     this.size = {x: 0, y: 0};
-    this.life = 1;
+    this.life = 0;
   }
 
   initialize(x, y, w, h) {
@@ -26,7 +26,7 @@ class Sprite {
   }
 
   reset() {
-    this.setup(0, 0, 0, 0);
+    this.initialize(0, 0, 0, 0);
     this.setVel(0, 0);
     this.acc.x = 0;
     this.acc.y = 0;
