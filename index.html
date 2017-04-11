@@ -9,21 +9,74 @@
 
 <body>
   <canvas id="canvas"></canvas>
-  <script src="index.js"></script>
+  <script src="dist/renderer.es5.js"></script>
 
   <script>
   window.addEventListener('load', () => {
 
     const canvas = document.getElementById('canvas');
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
 
     const renderer = new Renderer(canvas);
     renderer.createTexture('./bunny.png')
       .then(data => {
-        console.log(data);
+
+        renderer.setTexture(0);
+        renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
+
+        renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
+
+        loop();
       })
       .catch(err => {
         console.log(err);
       });
+
+    function loop() {
+      requestAnimationFrame(loop);
+
+      const sprites = renderer.sprites.elements;
+      for (let i = 0, l = sprites.length; i < l; i++) {
+        const sprite = sprites[i];
+
+        if (sprite.allocated === true) {
+          const w = sprite.size.x;
+          const h = sprite.size.y;
+
+          sprite.acc.x *= 0.25;
+          sprite.acc.y *= 0.35;
+          sprite.vel.x += sprite.acc.x;
+          sprite.vel.y += sprite.acc.y;
+
+          sprite.pos.x += sprite.vel.x;
+          sprite.pos.y += sprite.vel.y;
+
+          sprite.acc.x = 0;
+          sprite.acc.y = 0;
+
+          const right = renderer.width + (w * 2);
+          const bottom = renderer.height + (h * 2);
+          const left = (w * 2) * -1;
+          const top = (h * 2) * -1;
+
+          if (sprite.pos.x > right) {
+            sprite.pos.x = left;
+          }
+          if (sprite.pos.x < left) {
+            sprite.pos.x = right;
+          }
+
+          if (sprite.pos.y < top) {
+            sprite.pos.y = bottom;
+          }
+          if (sprite.pos.y > bottom) {
+            sprite.pos.y = top;
+          }
+        }
+      }
+      renderer.draw();
+    }
   });
   </script>
 </body>

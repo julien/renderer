@@ -1,0 +1,28 @@
+{
+  "name": "renderer",
+  "version": "1.0.0",
+
+  "description": "renderer",
+
+  "scripts": {
+    "postinstall": "npm run build",
+    "rollup": "rollup -f=umd -n=Renderer -o=dist/renderer.js -- src/renderer.js",
+    "build":  "npm run rollup && buble dist/renderer.js -o dist/renderer.es5.js -m"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julien/renderer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/julien/renderer/issues"
+  },
+  "homepage": "https://github.com/julien/renderer#readme",
+  "devDependencies": {
+    "buble": "^0.15.2",
+    "rollup": "^0.41.6"
+  }
+}
