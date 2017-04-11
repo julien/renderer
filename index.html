@@ -25,7 +25,7 @@
         renderer.setTexture(0);
         renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 100; i++) {
           renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
         }
 
@@ -43,13 +43,10 @@
         const sprite = sprites[i];
 
         if (sprite.allocated === true) {
-          const w = sprite.size.x;
-          const h = sprite.size.y;
-
-          sprite.acc.y += 3;
+          sprite.acc.y += 4;
 
           sprite.acc.x *= 0.025;
-          sprite.acc.y *= 0.035;
+          sprite.acc.y *= 0.025;
 
           sprite.vel.x += sprite.acc.x;
           sprite.vel.y += sprite.acc.y;
@@ -60,23 +57,18 @@
           sprite.acc.x = 0;
           sprite.acc.y = 0;
 
-          const right = renderer.width + (w * 2);
-          const bottom = renderer.height + (h * 2);
-          const left = (w * 2) * -1;
-          const top = (h * 2) * -1;
-
-          if (sprite.pos.x > right) {
-            sprite.pos.x = left;
+          if (sprite.pos.x > renderer.width + sprite.size.x) {
+            sprite.vel.x *= -1;
           }
-          if (sprite.pos.x < left) {
-            sprite.pos.x = right;
+          if (sprite.pos.x < -sprite.size.x) {
+            sprite.vel.x *= -1;
           }
 
-          if (sprite.pos.y < top) {
-            sprite.pos.y = bottom;
+          if (sprite.pos.y < -sprite.size.y) {
+            sprite.vel.y *= -1;
           }
-          if (sprite.pos.y > bottom) {
-            sprite.pos.y = top;
+          if (sprite.pos.y > renderer.height + sprite.size.y) {
+            sprite.vel.y *= -1;
           }
         }
       }
