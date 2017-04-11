@@ -25,7 +25,9 @@
         renderer.setTexture(0);
         renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 
-        renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
+        for (let i = 0; i < 1000; i++) {
+          renderer.addSprite(renderer.width * 0.5, renderer.height * 0.5, 26, 37);
+        }
 
         loop();
       })
@@ -44,8 +46,11 @@
           const w = sprite.size.x;
           const h = sprite.size.y;
 
-          sprite.acc.x *= 0.25;
-          sprite.acc.y *= 0.35;
+          sprite.acc.y += 3;
+
+          sprite.acc.x *= 0.025;
+          sprite.acc.y *= 0.035;
+
           sprite.vel.x += sprite.acc.x;
           sprite.vel.y += sprite.acc.y;
 
