@@ -10,13 +10,17 @@
 <body>
 
   <canvas id="canvas"></canvas>
-  <script src="dist/renderer.es5.js"></script>
+  <script src="dist/renderer.js"></script>
 
   <script>
   window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas');
     canvas.width = innerWidth;
     canvas.height = innerHeight;
+
+    let mouseDown = false;
+    canvas.addEventListener('mousedown', onMouseDown, false);
+    canvas.addEventListener('mouseup', onMouseUp, false);
 
     const renderer = new Renderer(canvas);
     renderer.createTexture('./bunny.png')
@@ -43,6 +47,8 @@
 
     function loop() {
       requestAnimationFrame(loop);
+
+      renderer.updateTime();
 
       const sprites = renderer.sprites.elements;
       for (let i = 0, l = sprites.length; i < l; i++) {
@@ -87,7 +93,21 @@
         }
       }
       renderer.draw();
+
+      if (mouseDown === true) {
+        for (let i = 0; i < 3; i++) {
+          addSprite();
+        }
+      }
     }
+
+    function onMouseDown() {
+      mouseDown = true;
+    }
+    function onMouseUp() {
+      mouseDown = false;
+    }
+
   });
   </script>
 </body>
