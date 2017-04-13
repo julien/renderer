@@ -14,9 +14,8 @@ class Renderer {
     this.programInfo = {
       a_position: this.gl.getAttribLocation(this.program, 'a_position'),
       a_texCoord: this.gl.getAttribLocation(this.program, 'a_texCoord'),
-      u_matrix:   this.gl.getUniformLocation(this.program, 'u_matrix')
-      // u_time ?
-      // u_mouse?
+      u_matrix: this.gl.getUniformLocation(this.program, 'u_matrix'),
+      u_time: this.gl.getUniformLocation(this.program, 'u_time')
     };
 
     this.gl.useProgram(this.program);
@@ -26,8 +25,8 @@ class Renderer {
 
     this._createBuffers();
 
-    this.elementSize = 30;
-    this.vertexData = new Float32Array(500 * 30);
+    this.startTime = Date.now();
+    this.vertexData = new Float32Array(Renderer.MIN_ELEMENTS * 30);
 
     const w = this.gl.canvas.clientWidth;
     const h = this.gl.canvas.clientHeight;
@@ -77,10 +76,13 @@ class Renderer {
     attribute vec3 a_position;
     attribute vec2 a_texCoord;
     varying vec2 v_texCoord;
+    uniform float u_time;
 
     void main() {
       vec4 pos = vec4(a_position.xyz, 1.0);
+
       v_texCoord = a_texCoord;
+
       gl_Position = pos * u_matrix;
     }`;
 
@@ -171,8 +173,7 @@ class Renderer {
   }
 
   _createBuffers() {
-    // Probably put MAX_ELEMENTS and ELEMENT_SIZE in a constant
-    this.vertexData = new Float32Array(100 * 30);
+    this.vertexData = new Float32Array(Renderer.MIN_ELEMENTS * 30);
 
     this.vertexBuffer = this.gl.createBuffer();
 
@@ -188,10 +189,6 @@ class Renderer {
 
     this.gl.vertexAttribPointer(this.programInfo.a_position, 3, this.gl.FLOAT, false, stride, 0);
     this.gl.vertexAttribPointer(this.programInfo.a_texCoord, 2, this.gl.FLOAT, false, stride, offset);
-  }
-
-  resizeCanvas() {
-
   }
 
   setViewMatrix(width, height) {
@@ -231,11 +228,11 @@ class Renderer {
         let xx = x + sprite.size.x;
         let yy = y + sprite.size.y;
 
-        this.vertexData[quads30i++] = x; // first vertex x
-        this.vertexData[quads30i++] = y; // first vertex y
-        this.vertexData[quads30i++] = 0; // first vertex z
-        this.vertexData[quads30i++] = 0; // first vertex s
-        this.vertexData[quads30i++] = 0; // first vertex t
+        this.vertexData[quads30i++] = x;
+        this.vertexData[quads30i++] = y;
+        this.vertexData[quads30i++] = 0;
+        this.vertexData[quads30i++] = 0;
+        this.vertexData[quads30i++] = 0;
 
         this.vertexData[quads30i++] = xx;
         this.vertexData[quads30i++] = y;
@@ -295,19 +292,18 @@ class Renderer {
       .setVel(velx, vely);
   }
 
-  updateSprites() {
-    for (let i = 0, l = this.sprites.elements.length; i < l; i++) {
-      const sprite = this.sprites.elements[i];
-      if (sprite.allocated === true)  {
-        // if (sprite.life === 0) {
-        //   this.sprites.free(sprite);
-        // }
-      }
-    }
+  updateTime() {
+    const now = Date.now();
+    const delta = now - this.startTime;
+    this.startTime = now;
+    this.gl.uniform1f(this.programInfo.u_time, now);
   }
 
   removeSprite(sprite) {
     this.sprites.free(sprite);
   }
 }
+
+Renderer.MIN_ELEMENTS = 500;
+
 export default Renderer;
